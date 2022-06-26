@@ -3,14 +3,14 @@
 #![allow(unused)]
 
 pub fn production_rate_per_hour(speed: u8) -> f64 {
-    let N:u64 = 221;
-    let S:u64 = speed as u64;
+    let n:u64 = 221;
+    let s:u64 = speed as u64;
     if speed >= 1 && speed <= 4 {
-        (S * N) as f64
+        (s * n) as f64
     } else if speed >= 5 && speed <= 8 {
-        (S * N) as f64 * 0.9
+        (s * n) as f64 * 0.9
     } else if speed >= 9 && speed <= 10 {
-        (S * N) as f64 * 0.77
+        (s * n) as f64 * 0.77
     } else {
         0.0
     }
