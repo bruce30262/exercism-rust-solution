@@ -32,6 +32,6 @@ pub fn value_to_color_string(value: usize) -> String {
 
 pub fn colors() -> Vec<ResistorColor> {
     let mut res = all::<ResistorColor>().collect::<Vec<_>>();
-    res.sort_by(|a, b| a.int_value().cmp(&b.int_value()));
+    res.sort_by_key(|a| a.int_value());
     res
 }
