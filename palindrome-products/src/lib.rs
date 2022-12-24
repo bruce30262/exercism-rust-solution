@@ -16,11 +16,7 @@ fn is_palindrome(v: u64) -> bool {
     }
     if h != l { return false; }
     // do check
-    if v.to_string().chars().rev().collect::<String>() == v.to_string().chars().collect::<String>() {
-        true
-    } else {
-        false
-    }
+    v.to_string().chars().rev().collect::<String>() == v.to_string().chars().collect::<String>()
 }
 
 impl Palindrome {
@@ -46,16 +42,16 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
         for j in i..max+1 {
             let v:u64 = j*i;
             if is_palindrome(v) {
-                if pmin == None {
+                if pmin.is_none() {
                     pmin = Palindrome::new(v);
                 }
-                if pmax == None || pmax.unwrap().into_inner() < v {
+                if pmax.is_none() || pmax.unwrap().into_inner() < v {
                     pmax = Palindrome::new(v);
                 }
             }
         }
     }
-    match pmin == None {
+    match pmin.is_none() {
         true => None,
         false => Some((pmin.unwrap(), pmax.unwrap())),
     }
