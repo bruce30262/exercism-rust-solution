@@ -11,10 +11,7 @@ pub struct Queen {
 
 impl ChessPosition {
     pub fn is_valid_position(rank: i32, file: i32) -> bool {
-        match (rank, file) {
-            (0..=7, 0..=7) => true,
-            _ => false,
-        }
+        matches!((rank, file), (0..=7, 0..=7))
     }
     pub fn new(rank: i32, file: i32) -> Option<Self> {
         if !Self::is_valid_position(rank, file) { return None; }
