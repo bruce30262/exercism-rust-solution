@@ -21,19 +21,11 @@ impl BowlingGame {
     }   
 
     fn is_spare(&self, cur_round: usize) -> bool {
-        if cur_round & 1 == 1 && self.frame_score[ cur_round - 1 ] + self.frame_score[ cur_round ] == 10 {
-            true
-        } else {
-            false
-        }
+        cur_round & 1 == 1 && self.frame_score[ cur_round - 1 ] + self.frame_score[ cur_round ] == 10
     }
-    
+
     fn is_strike(&self, cur_round: usize) -> bool {
-        if (cur_round & 1 == 0 || cur_round == 19) && self.frame_score[ cur_round ] == 10 {
-            true
-        } else {
-            false
-        }
+        (cur_round & 1 == 0 || cur_round == 19) && self.frame_score[ cur_round ] == 10
     }
     
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
