@@ -22,14 +22,11 @@ const ALLERGENS: [Allergen; 8] = [Eggs, Peanuts, Shellfish, Strawberries, Tomato
 
 impl Allergies {
     pub fn new(score: u32) -> Self {
-        Allergies {
-            score: score,
-        }
+        Allergies { score }
     }
 
     pub fn is_allergic_to(&self, allergen: &Allergen) -> bool {
-        let ret:bool = if &self.score & *allergen as u32 != 0 { true } else { false };
-        ret
+        self.score & *allergen as u32 != 0
     }
 
     pub fn allergies(&self) -> Vec<Allergen> {
