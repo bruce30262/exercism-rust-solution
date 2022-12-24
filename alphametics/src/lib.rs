@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use itertools::Itertools; // https://docs.rs/itertools/0.10.5/itertools/trait.Itertools.html
 
-pub fn to_number(map: &HashMap<char, u8>, s: &String) -> usize {
+pub fn to_number(map: &HashMap<char, u8>, s: &str) -> usize {
     let mut ret: usize = 0;
     for c in s.chars() {
         ret = ret * 10 + (*map.get(&c).unwrap() as usize);
@@ -16,8 +16,8 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
     // get leading chars and operands
     let mut leading_char_set: HashSet<char> = HashSet::new();
     let mut operands: Vec<String> = Vec::new();
-    for c in input.split(" ").filter(|x| x.chars().nth(0).unwrap().is_alphabetic() ) {
-        leading_char_set.insert(c.chars().nth(0).unwrap());
+    for c in input.split(' ').filter(|x| x.chars().next().unwrap().is_alphabetic() ) {
+        leading_char_set.insert(c.chars().next().unwrap());
         operands.push(c.to_owned());
     }
     // setup hashmap and hashset
