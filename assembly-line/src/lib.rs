@@ -5,11 +5,11 @@
 pub fn production_rate_per_hour(speed: u8) -> f64 {
     let n:u64 = 221;
     let s:u64 = speed as u64;
-    if speed >= 1 && speed <= 4 {
+    if (1..=4).contains(&speed) {
         (s * n) as f64
-    } else if speed >= 5 && speed <= 8 {
+    } else if (5..=8).contains(&speed) {
         (s * n) as f64 * 0.9
-    } else if speed >= 9 && speed <= 10 {
+    } else if (9..=10).contains(&speed) {
         (s * n) as f64 * 0.77
     } else {
         0.0
