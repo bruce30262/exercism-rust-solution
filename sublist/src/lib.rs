@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[derive(Debug, PartialEq)]
 pub enum Comparison {
     Equal,
@@ -18,24 +20,27 @@ fn sol<T: PartialEq>(big: &[T], big_sz: usize, small: &[T], small_sz: usize) -> 
 pub fn sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> Comparison {
     let (len1, len2) = (_first_list.len(), _second_list.len());
     
-    if len1 > len2 {
-        // super list or unequal
-        match sol(_first_list, len1, _second_list, len2) {
-            true => Comparison::Superlist,
-            false => Comparison::Unequal
+    match len1.cmp(&len2) {
+        Ordering::Greater => {
+            // super list or unequal
+            match sol(_first_list, len1, _second_list, len2) {
+                true => Comparison::Superlist,
+                false => Comparison::Unequal
+            }
         }
-
-    } else if len1 == len2 {
-        // equal or unequal
-        match sol(_first_list, len1, _second_list, len2) {
-            true => Comparison::Equal,
-            false => Comparison::Unequal
+        Ordering::Equal => {
+            // equal or unequal
+            match sol(_first_list, len1, _second_list, len2) {
+                true => Comparison::Equal,
+                false => Comparison::Unequal
+            }
         }
-    } else {
-        // sublist or unequal
-        match sol(_second_list, len2, _first_list, len1) {
-            true => Comparison::Sublist,
-            false => Comparison::Unequal
+        Ordering::Less => {
+            // sublist or unequal
+            match sol(_second_list, len2, _first_list, len1) {
+                true => Comparison::Sublist,
+                false => Comparison::Unequal
+            }
         }
     }   
 }
