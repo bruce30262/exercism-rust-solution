@@ -14,7 +14,7 @@ fn ten_pow_bigint(p: isize) -> BigInt {
 }
 
 fn get_times_val(dot_self: isize, dot_other: isize) -> BigInt {
-    ten_pow_bigint((dot_self - dot_other).abs().try_into().unwrap())
+    ten_pow_bigint((dot_self - dot_other).abs())
 }
 
 impl Decimal {
@@ -70,14 +70,14 @@ impl Decimal {
 
     pub fn try_from(input: &str) -> Option<Decimal> {
         let (mut left, mut right, mut after_dot) = (BigInt::from(0), BigInt::from(0), 0);
-        for (idx, data) in input.split(".").filter(|x| x.len() > 0).enumerate() {
+        for (idx, data) in input.split('.').filter(|x| !x.is_empty()).enumerate() {
             match idx {
                 0 => left = BigInt::parse_bytes(data.as_bytes(), 10).unwrap(),
                 1 => {
                     let tmp = data.trim_end_matches('0').as_bytes();
-                    if tmp.len() > 0 {
+                    if !tmp.is_empty() {
                         right = BigInt::parse_bytes(tmp, 10).unwrap();
-                        if input.chars().nth(0).unwrap() == '-' { right = -right; }
+                        if input.starts_with('-') { right = -right; }
                     }
                     after_dot = tmp.len() as isize;
                 }
@@ -113,7 +113,7 @@ impl Add for Decimal {
         let tmp1 = self.to_integer_bigint(after_dot);
         let tmp2 = other.to_integer_bigint(after_dot);
         let left = (tmp1.clone() + tmp2.clone()) / ten_pow_bigint(after_dot);
-        let right = (tmp1.clone() + tmp2.clone()) % ten_pow_bigint(after_dot);
+        let right = (tmp1 + tmp2) % ten_pow_bigint(after_dot);
 
         let mut ret = Self { left, right, after_dot };
         ret.carry();
@@ -128,7 +128,7 @@ impl Sub for Decimal {
         let tmp1 = self.to_integer_bigint(after_dot);
         let tmp2 = other.to_integer_bigint(after_dot);
         let left = (tmp1.clone() - tmp2.clone()) / ten_pow_bigint(after_dot);
-        let right = (tmp1.clone() - tmp2.clone()) % ten_pow_bigint(after_dot);
+        let right = (tmp1 - tmp2) % ten_pow_bigint(after_dot);
 
         let mut ret = Self { left, right, after_dot };
         ret.carry();
@@ -143,7 +143,7 @@ impl Mul for Decimal {
         let tmp1 = self.to_integer_bigint(self.after_dot);
         let tmp2 = other.to_integer_bigint(other.after_dot);
         let left = tmp1.clone() * tmp2.clone() / ten_pow_bigint(after_dot);
-        let right = tmp1.clone() * tmp2.clone() % ten_pow_bigint(after_dot);
+        let right = tmp1 * tmp2 % ten_pow_bigint(after_dot);
 
         let mut ret = Self { left, right, after_dot };
         ret.carry();
