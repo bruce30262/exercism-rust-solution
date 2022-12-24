@@ -54,7 +54,7 @@ impl Poker {
         let main_num:u8;
         let hand: Hand;
 
-        let (card_num, card_num_max_cnt) = nums.iter().max_by(|a, b| a.1.cmp(&b.1)).unwrap(); // get max count in nums
+        let (card_num, card_num_max_cnt) = nums.iter().max_by(|a, b| a.1.cmp(b.1)).unwrap(); // get max count in nums
         // Detect FourOfKind / ThreeOfKind / TwoPair / OnePair
         if *card_num_max_cnt == 4 {
             main_num = *card_num;
@@ -85,7 +85,7 @@ impl Poker {
             // Straight Flush, Flush, Straight, HighCard
             let tmp_min = nums.iter().next().unwrap().0; // get min value in nums
             let tmp_max = nums.iter().next_back().unwrap().0; // get max value in nums
-            if Self::is_straight(&nums) {
+            if Self::is_straight(nums) {
                 if *tmp_min == 1 && *tmp_max == 13 {
                     main_num = 1;
                 } else {
@@ -115,9 +115,9 @@ impl Poker {
     pub fn new(poker: &str) -> Self {
         let mut shapes = HashSet::new();
         let mut nums = BTreeMap::new();
-        for card in poker.split(" ") {
+        for card in poker.split(' ') {
             let shape: char = card.chars().last().unwrap();
-            let num: u8 = match (&card[0..card.len()-1]).parse::<u8>() {
+            let num: u8 = match (card[0..card.len()-1]).parse::<u8>() {
                 Ok(n) => n,
                 Err(_) => Self::to_num(&card[0..card.len()-1]),// A, J, Q, K
             };
@@ -159,7 +159,7 @@ fn rank_map(old_map: &BTreeMap<u8, u8>) -> BTreeMap<u8, u8> {
 
 impl PartialOrd for Poker {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
 }
 
@@ -171,21 +171,21 @@ impl Ord for Poker {
                 let other_rank_map = rank_map(&other.nums);
                 match self.hand {
                     Hand::TwoPair=> {
-                        let self_2nd_pair = self_rank_map.iter().filter(|&(k, v)| *k != self.main_num && *v == 2).next().unwrap().0;
-                        let other_2nd_pair = other_rank_map.iter().filter(|&(k, v)| *k != other.main_num && *v == 2).next().unwrap().0;
+                        let self_2nd_pair = self_rank_map.iter().find(|&(k, v)| *k != self.main_num && *v == 2).unwrap().0;
+                        let other_2nd_pair = other_rank_map.iter().find(|&(k, v)| *k != other.main_num && *v == 2).unwrap().0;
                         if self_2nd_pair == other_2nd_pair { // find max
-                            let self_max = self_rank_map.iter().filter(|&(_, v)| *v == 1).next().unwrap().0;
-                            let other_max = other_rank_map.iter().filter(|&(_, v)| *v == 1).next().unwrap().0;
-                            self_max.cmp(&other_max)
+                            let self_max = self_rank_map.iter().find(|&(_, v)| *v == 1).unwrap().0;
+                            let other_max = other_rank_map.iter().find(|&(_, v)| *v == 1).unwrap().0;
+                            self_max.cmp(other_max)
 
                         } else { // cmp 2nd pair
-                            self_2nd_pair.cmp(&other_2nd_pair)
+                            self_2nd_pair.cmp(other_2nd_pair)
                         }
                     }
                     Hand::ThreeOfKind | Hand::OnePair => { // find max
                         let self_max = self_rank_map.keys().filter(|&x| *x != self.main_num).max().unwrap();
                         let other_max = other_rank_map.keys().filter(|&x| *x != other.main_num).max().unwrap();
-                        self_max.cmp(&other_max)
+                        self_max.cmp(other_max)
                     }
                     _ => self_rank_map.cmp(&other_rank_map), // can cmp BTreeMap directly
                 }
