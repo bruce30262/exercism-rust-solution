@@ -14,8 +14,8 @@ pub mod graph {
             Self { ..Default::default() }   
         }
         
-        pub fn with_nodes(mut self, nodes: &Vec<Node>) -> Self {
-            self.nodes = nodes.clone();
+        pub fn with_nodes(mut self, nodes: &[Node]) -> Self {
+            self.nodes = nodes.to_owned();
             self
         }
         pub fn node(&self, name: &str) -> Option<Node> {
@@ -27,8 +27,8 @@ pub mod graph {
             None
         }
         
-        pub fn with_edges(mut self, edges: &Vec<Edge>) -> Self {
-            self.edges = edges.clone();
+        pub fn with_edges(mut self, edges: &[Edge]) -> Self {
+            self.edges = edges.to_owned();
             self
         }
         
