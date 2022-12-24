@@ -20,9 +20,9 @@ pub fn check_rec_ok(src: &Point, dst: &Point, art_str: &str, line_len:usize) -> 
     let Point {x: x2, y: y2} = *dst;
     // check if we can walk from x1 to x2 from both y1 & y2
     for x in min(x1, x2)..max(x1, x2)+1 {
-        match art_str.chars().nth((y1.abs() as usize) * line_len + x).unwrap() {
+        match art_str.chars().nth((y1.unsigned_abs()) * line_len + x).unwrap() {
             '-' | '+' => {
-                match art_str.chars().nth((y2.abs() as usize) * line_len + x).unwrap() {
+                match art_str.chars().nth((y2.unsigned_abs()) * line_len + x).unwrap() {
                     '-' | '+' => continue,
                     _ => return false,
                 }
@@ -32,9 +32,9 @@ pub fn check_rec_ok(src: &Point, dst: &Point, art_str: &str, line_len:usize) -> 
     }
     // check if we can walk from y1 to y2 from both x1 & x2
     for y in min(y1, y2)..max(y1, y2)+1 {
-        match art_str.chars().nth((y.abs() as usize) * line_len + x2).unwrap() {
+        match art_str.chars().nth((y.unsigned_abs()) * line_len + x2).unwrap() {
             '|' | '+' => {
-                match art_str.chars().nth((y.abs() as usize) * line_len + x1).unwrap() {
+                match art_str.chars().nth((y.unsigned_abs()) * line_len + x1).unwrap() {
                     '|' | '+' => continue,
                     _ => return false,
                 }
@@ -59,7 +59,7 @@ pub fn count(lines: &[&str]) -> u32 {
         }
         y -= 1;
     }
-    if pv.len() == 0 { return 0; }
+    if pv.is_empty() { return 0; }
     pv.sort();
     // calculate rectangle count
     let mut rec_map:HashMap<String, bool> = HashMap::new();
@@ -83,9 +83,7 @@ pub fn count(lines: &[&str]) -> u32 {
             for p in point_set.iter() { // construct string of rectangle ( 4 points )
                 rec_str.push_str(&p.to_string());
             }
-            if !rec_map.contains_key(&rec_str) { // add new rectangle only
-                rec_map.insert(rec_str, true);
-            }
+            rec_map.entry(rec_str).or_insert(true); // add new rectangle only
         }
     }
     rec_map.keys().len() as u32
