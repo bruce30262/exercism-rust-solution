@@ -38,7 +38,7 @@ impl fmt::Display for Error {
 
 pub fn first_letter_to_uppercase(s: &str) -> String {
     let mut v: Vec<char> = s.chars().collect();
-    v[0] = v[0].to_uppercase().nth(0).unwrap();
+    v[0] = v[0].to_uppercase().next().unwrap();
     v.into_iter().collect()
 }
 
@@ -60,11 +60,10 @@ pub struct Scale {
 impl Scale {
     pub fn new(tonic: &str, intervals: &str) -> Result<Scale, Error> {
         // pick a scale
-        let scale:&[&str];
-        match pick_scale(tonic) {
-            Ok(s) => scale = s,
+        let scale:&[&str] = match pick_scale(tonic) {
+            Ok(s) => s,
             Err(err) => return Err(err),
-        }
+        };
         // push first note after convert its first letter to uppercase
         let mut res:Vec<String> = Vec::new();
         let tonic_real:String = first_letter_to_uppercase(tonic);
